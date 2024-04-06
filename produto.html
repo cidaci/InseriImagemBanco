@@ -1,0 +1,89 @@
+<!--
+<?php
+
+// Conexão com o banco de dados
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "loja";
+
+// Cria a conexão
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Validação dos dados
+if (empty($_POST["nome"]) || empty($_POST["descricao"]) || empty($_POST["preco"]) || empty($_POST["imagem"]) || empty($_POST["categoria"]) || empty($_POST["estoque"])) {
+    echo "<p>Erro: Todos os campos são obrigatórios.</p>";
+    exit();
+}
+
+// Recebe os dados do formulário
+$nome = $_POST["nome"];
+$descricao = $_POST["descricao"];
+$preco = $_POST["preco"];
+$imagem = $_FILES["imagem"]["name"];
+$categoria = $_POST["categoria"];
+$estoque = $_POST["estoque"];
+
+// Upload da imagem
+$target_dir = "imagens/";
+$target_file = $target_dir . basename($imagem);
+if (!move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file)) {
+    echo "<p>Erro ao enviar a imagem.</p>";
+    exit();
+}
+
+// Insere os dados na tabela produtos
+$sql = "INSERT INTO produtos (nome, descricao, preco, imagem, categoria, estoque) VALUES ('$nome', '$descricao', $preco, '$imagem', '$categoria', $estoque)";
+
+if ($conn->query($sql) === TRUE) {
+    echo "<p>Produto cadastrado com sucesso!</p>";
+} else {
+    echo "<p>Erro ao cadastrar o produto.</p>";
+    echo "<p>Erro: " . $conn->error . "</p>";
+}
+
+$conn->close();
+
+?>
+-->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" href="produto.css">
+</head>
+<body>
+    <h1>Cadastro de Produtos</h1>
+    <form action="cadastrar.php" method="post">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <br>
+        <label for="descricao">Descrição:</label>
+        <br>
+        <textarea id="descricao" name="descricao" rows="5" required></textarea>
+        <br>
+        <label for="preco">Preço:</label>
+        <input type="number" id="preco" name="preco" step="0.01" required>
+        <br>
+        <label for="imagem">Imagem:</label>
+        <input type="file" id="imagem" name="imagem" accept="image/*" required>
+        <br>
+        <label for="categoria">Categoria:</label>
+        <select id="categoria" name="categoria">
+            <option value="">Selecione...</option>
+            <option value="Roupas">Roupas</option>
+            <option value="Acessórios">Acessórios</option>
+            <option value="Eletrônicos">Eletrônicos</option>
+            <option value="Outros">Outros</option>
+        </select>
+        <br>
+        <label for="estoque">Estoque:</label>
+        <input type="number" id="estoque" name="estoque" required>
+        <br><br>
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>
